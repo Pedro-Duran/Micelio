@@ -5,8 +5,10 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "posts")
@@ -29,6 +31,13 @@ public class Post {
     @JsonBackReference
     @ToString.Exclude
     private User author;
+
+    @ElementCollection
+    @Column(name = "link", nullable = false)
+    @CollectionTable(name = "post_links", joinColumns = @JoinColumn(name = "post_id"))
+    private List<Long> links;
+
+
 
 
 

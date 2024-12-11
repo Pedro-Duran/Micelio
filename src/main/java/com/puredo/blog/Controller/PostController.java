@@ -53,7 +53,8 @@ public class PostController {
                 createdPost.getTitle(),
                 createdPost.getContent(),
                 authorDTO,
-                createdPost.getCreatedAt().toString()
+                createdPost.getCreatedAt().toString(),
+                createdPost.getLinks()
         );
 
         return ResponseEntity.ok(response);
@@ -82,7 +83,8 @@ public class PostController {
                         post.getTitle(),
                         post.getContent(),
                         convertToUsuarioPublico(post.getAuthor()),
-                        post.getCreatedAt().toString()
+                        post.getCreatedAt().toString(),
+                        post.getLinks()
                 ))
                 .collect(Collectors.toList());
 
@@ -100,8 +102,11 @@ public class PostController {
         existingPost.get().setTitle(request.getTitle());
         existingPost.get().setContent(request.getContent());
 
-        Post updatedPost = postService.updatePost(existingPost.get());
 
+
+        Post updatedPost = existingPost.get();
+        updatedPost.setLinks(request.getLinks());
+        updatedPost = postService.updatePost(updatedPost);
         UserDTO.Response.UsuarioPublico usuarioPublico = convertToUsuarioPublico(updatedPost.getAuthor());
 
         PostDTO.Response.Post response = new PostDTO.Response.Post(
@@ -109,7 +114,8 @@ public class PostController {
                 updatedPost.getTitle(),
                 updatedPost.getContent(),
                 usuarioPublico,
-                updatedPost.getCreatedAt().toString()
+                updatedPost.getCreatedAt().toString(),
+                request.getLinks()
         );
 
         return ResponseEntity.ok(response);
