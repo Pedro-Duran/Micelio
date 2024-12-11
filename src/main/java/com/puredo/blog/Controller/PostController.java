@@ -92,15 +92,15 @@ public class PostController {
     // Endpoint para atualizar um post
     @PutMapping("/updatePost")
     public ResponseEntity<PostDTO.Response.Post> updatePost(@RequestParam String title, @RequestBody PostDTO.Request.Update request) {
-        Post existingPost = postService.getPostByTitle(title);
-        if (existingPost == null) {
+        Optional<Post> existingPost = postService.findPostByTitle(title);
+        if (existingPost.isEmpty()) {
             return ResponseEntity.notFound().build(); // Retorna 404 se o post não for encontrado
         }
+        System.out.println("IMPRIMINDO O EXISTING POST ======= " + existingPost.get().getTitle());
+        existingPost.get().setTitle(request.getTitle());
+        existingPost.get().setContent(request.getContent());
 
-        existingPost.setTitle(request.getTitle());
-        existingPost.setContent(request.getContent());
-
-        Post updatedPost = postService.updatePost(existingPost);
+        Post updatedPost = postService.updatePost(existingPost.get());
 
         UserDTO.Response.UsuarioPublico usuarioPublico = convertToUsuarioPublico(updatedPost.getAuthor());
 

@@ -13,7 +13,7 @@ import java.util.Optional;
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long> {
     // Adicione métodos personalizados aqui, se necessário
-    public Post findByTitle(String title);
+    public Optional<Post> findPostByTitle(String title);
 
 
 }

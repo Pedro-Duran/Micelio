@@ -45,8 +45,8 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public Post getPostByTitle(String title) {
-        return postRepository.findByTitle(title);
+    public Optional<Post> findPostByTitle(String title) {
+        return postRepository.findPostByTitle(title);
     }
 
     @Override

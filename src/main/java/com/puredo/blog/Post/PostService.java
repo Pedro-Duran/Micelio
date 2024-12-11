@@ -18,7 +18,7 @@ public interface PostService {
 
     void deletePostById(Long id);
 
-    Post getPostByTitle(String title);
+    Optional<Post> findPostByTitle(String title);
 
     Optional<Post> getPostByID(Long id);
 
