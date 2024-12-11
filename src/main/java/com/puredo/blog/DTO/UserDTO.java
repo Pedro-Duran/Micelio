@@ -1,6 +1,7 @@
 package com.puredo.blog.DTO;
 
 import com.puredo.blog.Entity.Post;
+import lombok.Data;
 import lombok.Value;
 
 import java.util.List;
@@ -27,6 +28,7 @@ public enum UserDTO {;
     // DTOs para Requisições
     public enum Request {;
 
+        @Data
         @Value
         public static class Create implements Username, Password {
             String username;
@@ -34,8 +36,9 @@ public enum UserDTO {;
         }
 
         @Value
-        public static class UpdatePassword implements Id, Password {
+        public static class Update implements Id, Username, Password {
             Long id;
+            String username;
             String password;
         }
 
