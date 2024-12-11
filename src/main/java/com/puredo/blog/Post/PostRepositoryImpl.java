@@ -2,7 +2,7 @@ package com.puredo.blog.Post;
 
 
 
-import com.puredo.blog.model.Post;
+import com.puredo.blog.Entity.Post;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.springframework.stereotype.Repository;

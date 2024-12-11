@@ -1,8 +1,10 @@
-package com.puredo.blog.model;
+package com.puredo.blog.Entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
 
@@ -24,7 +26,11 @@ public class Post {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "author_id", nullable = false)
-    private com.puredo.blog.model.User author;
+    @JsonBackReference
+    @ToString.Exclude
+    private User author;
+
+
 
     @Column(nullable = false)
     private LocalDateTime createdAt;

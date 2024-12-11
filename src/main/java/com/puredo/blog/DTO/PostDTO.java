@@ -1,6 +1,7 @@
 package com.puredo.blog.DTO;
 
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Data;
 import lombok.Value;
 
 public enum PostDTO {;
@@ -18,22 +19,24 @@ public enum PostDTO {;
         String getContent();
     }
 
-    private interface AuthorUsername {
-        String getAuthorUsername();
+
+    private interface Author {
+        UserDTO.Response.UsuarioPublico getAuthor(); // Objeto complexo
     }
 
     private interface CreatedAt {
         String getCreatedAt();
     }
 
-    // DTOs para Requisições
+
     public enum Request {;
 
+        @Data
         @Value
-        public static class Create implements Title, Content, AuthorUsername {
+        public static class Create implements Title, Content, Author {
             String title;
             String content;
-            String authorUsername;
+            UserDTO.Response.UsuarioPublico author;
         }
 
         @Value
@@ -48,13 +51,19 @@ public enum PostDTO {;
     public enum Response {;
 
         @Value
-        public static class Public implements Id, Title, Content, AuthorUsername, CreatedAt {
+        public static class Post implements Id, Title, Content, Author, CreatedAt {
             Long id;
             String title;
             String content;
-            String authorUsername;
+            UserDTO.Response.UsuarioPublico author; // Alinhe a resposta ao JSON esperado
             String createdAt;
+
+        }
+
+        @Value
+        public static class PostSummary implements Id, Title {
+            Long id;
+            String title;
         }
     }
 }
-

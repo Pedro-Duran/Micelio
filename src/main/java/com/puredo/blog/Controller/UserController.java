@@ -3,11 +3,14 @@ package com.puredo.blog.Controller;
 
 
 import com.puredo.blog.DTO.UserDTO;
-import com.puredo.blog.model.User;
+
+import com.puredo.blog.Entity.User;
 import com.puredo.blog.User.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/users")
@@ -31,21 +34,21 @@ public class UserController {
         UserDTO.Response.UsuarioPublico response = new UserDTO.Response.UsuarioPublico(
                 savedUser.getId(),
                 savedUser.getUsername(),
-        savedUser.getPosts());
+                savedUser.getPosts());
 
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/verUsuario")
     public ResponseEntity<User> getUserByUsername(@RequestParam String username) {
-        User user = userService.findByUsername(username);
+        Optional<User> user = userService.findByUserName(username);
 
         UserDTO.Response.UsuarioPublico response = new UserDTO.Response.UsuarioPublico(
-                user.getId(),
-                user.getUsername(),
-                user.getPosts()
+                user.get().getId(),
+                user.get().getUsername(),
+                user.get().getPosts()
         );
 
-        return ResponseEntity.ok(user);
+        return ResponseEntity.ok(user.get());
     }
 }

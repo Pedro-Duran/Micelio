@@ -1,9 +1,11 @@
-package com.puredo.blog.model;
+package com.puredo.blog.Entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.util.List;
 
@@ -25,7 +27,8 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    @JsonProperty
-    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<com.puredo.blog.model.Post> posts;
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonManagedReference
+    @ToString.Exclude
+    private List<Post> posts;
 }

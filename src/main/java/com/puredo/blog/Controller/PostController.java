@@ -1,14 +1,17 @@
 package com.puredo.blog.Controller;
 
-import com.puredo.blog.User.UserService;
+import com.puredo.blog.DTO.UserDTO;
 import com.puredo.blog.DTO.PostDTO;
-import com.puredo.blog.model.Post;
+import com.puredo.blog.Entity.User;
+import com.puredo.blog.User.UserService;
+import com.puredo.blog.Entity.Post;
 import com.puredo.blog.Post.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -26,46 +29,101 @@ public class PostController {
 
     // Endpoint para criar um novo post
     @PostMapping("/createPost")
-    public ResponseEntity<PostDTO.Response.Public> createPost(@RequestBody PostDTO.Request.Create request) {
-        var author = userService.findByUsername(request.getAuthorUsername());
-        if (author == null) {
+    public ResponseEntity<PostDTO.Response.Post> createPost(@RequestBody PostDTO.Request.Create request) {
+        System.out.println(request.getAuthor().getUsername());
+
+        Optional<User> author = userService.findByUserName(request.getAuthor().getUsername());
+        System.out.println(author);
+        if (author.isEmpty()) {
             return ResponseEntity.badRequest().body(null); // Retorna erro se o autor não existir
         }
 
         Post post = new Post();
         post.setTitle(request.getTitle());
         post.setContent(request.getContent());
-        post.setAuthor(author);
+        post.setAuthor(author.get()); // Use a entidade diretamente
 
         Post createdPost = postService.createPost(post);
 
-        PostDTO.Response.Public response = new PostDTO.Response.Public(
+        // Converter o autor para o DTO UsuarioPublico
+        UserDTO.Response.UsuarioPublico authorDTO = convertToUsuarioPublico(createdPost.getAuthor());
+
+        PostDTO.Response.Post response = new PostDTO.Response.Post(
                 createdPost.getId(),
                 createdPost.getTitle(),
                 createdPost.getContent(),
-                createdPost.getAuthor().getUsername(),
+                authorDTO,
                 createdPost.getCreatedAt().toString()
         );
 
         return ResponseEntity.ok(response);
     }
 
+
+    private UserDTO.Response.UsuarioPublico convertToUsuarioPublico(com.puredo.blog.Entity.User user) {
+        return new UserDTO.Response.UsuarioPublico(
+                user.getId(),
+                user.getUsername(),
+                null // Se necessário, converta a lista de posts para PostSummary
+        );
+    }
+
     // Endpoint para listar todos os posts
     @GetMapping("/verPosts")
-    public ResponseEntity<List<PostDTO.Response.Public>> getAllPosts() {
+    public ResponseEntity<List<PostDTO.Response.Post>> getAllPosts() {
+
+
         List<Post> posts = postService.getAllPosts();
 
         // Converte cada Post em um DTO de resposta pública
-        List<PostDTO.Response.Public> responses = posts.stream()
-                .map(post -> new PostDTO.Response.Public(
+        List<PostDTO.Response.Post> responses = posts.stream()
+                .map(post -> new PostDTO.Response.Post(
                         post.getId(),
                         post.getTitle(),
                         post.getContent(),
-                        post.getAuthor().getUsername(),
+                        convertToUsuarioPublico(post.getAuthor()),
                         post.getCreatedAt().toString()
                 ))
                 .collect(Collectors.toList());
 
         return ResponseEntity.ok(responses);
+    }
+
+    // Endpoint para atualizar um post
+    @PutMapping("/updatePost")
+    public ResponseEntity<PostDTO.Response.Post> updatePost(@RequestParam String title, @RequestBody PostDTO.Request.Update request) {
+        Post existingPost = postService.getPostByTitle(title);
+        if (existingPost == null) {
+            return ResponseEntity.notFound().build(); // Retorna 404 se o post não for encontrado
+        }
+
+        existingPost.setTitle(request.getTitle());
+        existingPost.setContent(request.getContent());
+
+        Post updatedPost = postService.updatePost(existingPost);
+
+        UserDTO.Response.UsuarioPublico usuarioPublico = convertToUsuarioPublico(updatedPost.getAuthor());
+
+        PostDTO.Response.Post response = new PostDTO.Response.Post(
+                updatedPost.getId(),
+                updatedPost.getTitle(),
+                updatedPost.getContent(),
+                usuarioPublico,
+                updatedPost.getCreatedAt().toString()
+        );
+
+        return ResponseEntity.ok(response);
+    }
+
+    // Remover um post pelo ID
+    @DeleteMapping("/deletePost")
+    public ResponseEntity<Void> deletePost(@RequestParam Long id) {
+        Optional<Post> existingPost = postService.getPostByID(id);
+        if (existingPost.isEmpty()) {
+            return ResponseEntity.notFound().build(); // Retorna 404 se o post não for encontrado
+        }
+
+        postService.deletePostById(existingPost.get().getId());
+        return ResponseEntity.noContent().build(); // Retorna 204 (No Content) após exclusão
     }
 }

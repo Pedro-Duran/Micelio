@@ -2,9 +2,15 @@ package com.puredo.blog.User;
 
 
 
-import com.puredo.blog.model.User;
+import com.puredo.blog.Entity.User;
+import org.springframework.data.jpa.repository.Query;
+
+
+import java.util.Optional;
 
 public interface UserService {
     User createUser(User user);
-    User findByUsername(String username);
+
+
+    Optional<User> findByUserName(String username);
 }
