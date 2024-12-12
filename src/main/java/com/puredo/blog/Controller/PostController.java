@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/posts")
+@CrossOrigin(origins = "http://localhost:3000")
 public class PostController {
 
     private final PostService postService;
@@ -41,7 +42,8 @@ public class PostController {
         Post post = new Post();
         post.setTitle(request.getTitle());
         post.setContent(request.getContent());
-        post.setAuthor(author.get()); // Use a entidade diretamente
+        post.setAuthor(author.get());
+        post.setLinks(request.getLinks());// Use a entidade diretamente
 
         Post createdPost = postService.createPost(post);
 

@@ -44,6 +44,7 @@ public enum PostDTO {;
             String title;
             String content;
             UserDTO.Response.UsuarioPublico author;
+            List<Long> links;
         }
 
 
