@@ -43,7 +43,8 @@ public class PostController {
         post.setTitle(request.getTitle());
         post.setContent(request.getContent());
         post.setAuthor(author.get());
-        post.setLinks(request.getLinks());// Use a entidade diretamente
+        post.setLinks(request.getLinks());
+        post.setSubject(request.getSubject()); // Use a entidade diretamente
 
         Post createdPost = postService.createPost(post);
 
@@ -56,7 +57,8 @@ public class PostController {
                 createdPost.getContent(),
                 authorDTO,
                 createdPost.getCreatedAt().toString(),
-                createdPost.getLinks()
+                createdPost.getLinks(),
+                createdPost.getSubject()
         );
 
         return ResponseEntity.ok(response);
@@ -86,7 +88,8 @@ public class PostController {
                         post.getContent(),
                         convertToUsuarioPublico(post.getAuthor()),
                         post.getCreatedAt().toString(),
-                        post.getLinks()
+                        post.getLinks(),
+                        post.getSubject()
                 ))
                 .collect(Collectors.toList());
 
@@ -117,7 +120,8 @@ public class PostController {
                 updatedPost.getContent(),
                 usuarioPublico,
                 updatedPost.getCreatedAt().toString(),
-                request.getLinks()
+                request.getLinks(),
+                request.getSubject()
         );
 
         return ResponseEntity.ok(response);

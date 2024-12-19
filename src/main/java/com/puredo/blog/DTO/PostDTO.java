@@ -36,25 +36,32 @@ public enum PostDTO {;
         List<Long> getLinks();
     }
 
+
+    private interface Subject{
+        String getSubject();
+    }
+
     public enum Request {;
 
         @Data
         @Value
-        public static class Create implements Title, Content, Author {
+        public static class Create implements Title, Content, Author, Subject {
             String title;
             String content;
             UserDTO.Response.UsuarioPublico author;
             List<Long> links;
+            String subject;
         }
 
 
         @Data
         @Value
-        public static class Update implements Id, Title, Content, Links {
+        public static class Update implements Id, Title, Content, Links, Subject {
             Long id;
             String title;
             String content;
            List<Long> links;
+            String subject;
         }
     }
 
@@ -69,7 +76,7 @@ public enum PostDTO {;
             UserDTO.Response.UsuarioPublico author; // Alinhe a resposta ao JSON esperado
             String createdAt;
             List<Long> links;
-
+            String subject;
         }
 
         @Value

@@ -37,6 +37,8 @@ public class Post {
     @CollectionTable(name = "post_links", joinColumns = @JoinColumn(name = "post_id"))
     private List<Long> links;
 
+    @Column(nullable = false)
+    private String subject = "Sem Assunto"; // Valor padrão
 
 
 
