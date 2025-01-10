@@ -22,5 +22,5 @@ public interface PostService {
 
     Optional<Post> getPostByID(Long id);
 
-
+    public List<String> getDistinctSubjects();
 }

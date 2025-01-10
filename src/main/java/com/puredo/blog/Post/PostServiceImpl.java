@@ -54,5 +54,8 @@ public class PostServiceImpl implements PostService {
         return postRepository.findById(id);
     }
 
+    public List<String> getDistinctSubjects() {
+        return postRepository.findDistinctSubjects();
+    }
 
 }

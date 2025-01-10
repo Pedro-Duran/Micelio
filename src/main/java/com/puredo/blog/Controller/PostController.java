@@ -138,4 +138,9 @@ public class PostController {
         postService.deletePostById(existingPost.get().getId());
         return ResponseEntity.noContent().build(); // Retorna 204 (No Content) após exclusão
     }
+
+    @GetMapping("/subjects")
+    public List<String> getSubjects() {
+        return postService.getDistinctSubjects();
+    }
 }
