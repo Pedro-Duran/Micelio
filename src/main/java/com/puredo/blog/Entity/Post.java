@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.hibernate.annotations.Cascade;
 import org.springframework.boot.context.properties.bind.DefaultValue;
 
 import java.time.LocalDateTime;
@@ -35,6 +36,7 @@ public class Post {
     @ElementCollection
     @Column(name = "link", nullable = false)
     @CollectionTable(name = "post_links", joinColumns = @JoinColumn(name = "post_id"))
+    @Cascade(org.hibernate.annotations.CascadeType.DELETE_ORPHAN)
     private List<Long> links;
 
     @Column(nullable = false)

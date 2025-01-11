@@ -27,7 +27,4 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     List<Object[]> findPostIdsAndTitlesBySubject(@Param("subject") String subject);
 
 
-    @Modifying
-    @Query(value = "DELETE FROM post_links WHERE post_id = :postId", nativeQuery = true)
-    void deletePostLinksByPostId(@Param("postId") Long postId);
 }
