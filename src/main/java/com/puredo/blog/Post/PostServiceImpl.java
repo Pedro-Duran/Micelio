@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -58,4 +59,15 @@ public class PostServiceImpl implements PostService {
         return postRepository.findDistinctSubjects();
     }
 
+    @Override
+    public HashMap<Long, String> findPostsBySubject(String subject) {
+        List<Object[]> results = postRepository.findPostIdsAndTitlesBySubject(subject);
+        HashMap<Long, String> postMap = new HashMap<>();
+        for (Object[] result : results) {
+            Long id =  (Long) result[0];
+            String title = (String) result[1];
+            postMap.put(id, title);
+        }
+        return postMap;
+    }
 }

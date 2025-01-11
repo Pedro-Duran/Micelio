@@ -5,6 +5,7 @@ import com.puredo.blog.DTO.PostDTO;
 import com.puredo.blog.Entity.Post;
 import org.springframework.http.ResponseEntity;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,4 +24,6 @@ public interface PostService {
     Optional<Post> getPostByID(Long id);
 
     public List<String> getDistinctSubjects();
+
+    public HashMap<Long, String> findPostsBySubject(String subject);
 }
